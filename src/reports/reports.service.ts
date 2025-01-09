@@ -49,16 +49,16 @@ export class ReportsService {
       const precisionFormatted = (parseFloat(precision) || 0).toFixed(4);
       const report = await this.reportRepository.save({
         fileName: fileNameWithDate,
-        precision: precisionFormatted,
+        precision: parseFloat(precisionFormatted),
         object,
         url: `${envs.awsEndpoint}/${envs.awsBucketName}/${folder}${fileNameWithDate}`,
       });
 
       await this.reportRepository.save(report);
       const chat_id_telegram = '-4635919852';
-      const message = `Se ha subido un nuevo archivo con una precisión de ${precisionFormatted} y un objeto de ${object}`;
+      const message = `Se ha detectado una arma de fuego. Precisión: ${precisionFormatted}. Imagen: ${report.url}`;
       const telegramApiUrl =
-        'https://api.telegram.org/bot7223868207:AAEjzUlmaUCUQQo9R79a8TyaDjXVcE3vZv4/sendMessage';
+        'https://api.telegram.org/bot7648964628:AAH2VTZ-wR5NE27GKsTvwvQyHi7f4wVatII/sendMessage';
       const telegramMessage = {
         chat_id: chat_id_telegram,
         text: message,
