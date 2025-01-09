@@ -46,7 +46,8 @@ export class ReportsService {
           ACL: 'public-read',
         }),
       );
-      const precisionFormatted = (parseFloat(precision) || 0).toFixed(4);
+      const precisionFormatted = parseFloat(precision).toFixed(4);
+      console.log('precisionFormatted', precisionFormatted);
       const report = await this.reportRepository.save({
         fileName: fileNameWithDate,
         precision: parseFloat(precisionFormatted),

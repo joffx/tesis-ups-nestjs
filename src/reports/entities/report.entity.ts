@@ -14,7 +14,7 @@ export class Report {
   @Column()
   url: string;
 
-  @Column({ default: 0.0 })
+  @Column('float', { default: 0.0 })
   precision: number;
 
   @Column()
