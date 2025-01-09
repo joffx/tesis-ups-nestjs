@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In, Repository } from 'typeorm';
 import { Report } from './entities/report.entity';
-
+import axios from 'axios';
 @Injectable()
 export class ReportsService {
   constructor(
@@ -55,6 +55,16 @@ export class ReportsService {
       });
 
       await this.reportRepository.save(report);
+      const chat_id_telegram = '-4635919852';
+      const message = `Se ha subido un nuevo archivo con una precisión de ${precisionFormatted} y un objeto de ${object}`;
+      const telegramApiUrl =
+        'https://api.telegram.org/bot7223868207:AAEjzUlmaUCUQQo9R79a8TyaDjXVcE3vZv4/sendMessage';
+      const telegramMessage = {
+        chat_id: chat_id_telegram,
+        text: message,
+      };
+
+      await axios.post(telegramApiUrl, telegramMessage);
 
       return report;
     } catch (error) {
