@@ -5,7 +5,7 @@ import { envs } from 'src/config';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, In, Repository } from 'typeorm';
+import { DataSource, In, MoreThan, Repository } from 'typeorm';
 import { Report } from './entities/report.entity';
 import axios from 'axios';
 @Injectable()
@@ -86,13 +86,13 @@ export class ReportsService {
 
   async alertEsp32(): Promise<number> {
     try {
-      const oneMinuteAgo = new Date();
-      oneMinuteAgo.setMinutes(oneMinuteAgo.getMinutes() - 1);
+      const twoMinutesAgo = new Date();
+      twoMinutesAgo.setMinutes(twoMinutesAgo.getMinutes() - 2);
 
-      // Buscar reportes creados en el último minuto
+      // Buscar reportes creados en los últimos dos minutos
       const recentReport = await this.reportRepository.findOne({
         where: {
-          createdAt: In([oneMinuteAgo]),
+          createdAt: MoreThan(twoMinutesAgo),
         },
         order: {
           createdAt: 'DESC',
@@ -101,7 +101,9 @@ export class ReportsService {
 
       return recentReport ? 2 : 1;
     } catch (error) {
-      throw new InternalServerErrorException('Error al verificar reportes recientes');
+      throw new InternalServerErrorException(
+        'Error al verificar reportes recientes',
+      );
     }
   }
 }
