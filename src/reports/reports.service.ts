@@ -86,21 +86,24 @@ export class ReportsService {
 
   async alertEsp32(): Promise<number> {
     try {
-      const thirtySecondsAgo = new Date();
-      thirtySecondsAgo.setSeconds(thirtySecondsAgo.getSeconds() - 30);
-  
+      const twoMinutesAgo = new Date();
+      twoMinutesAgo.setMinutes(twoMinutesAgo.getMinutes() - 1);
+
+      // Buscar reportes creados en los últimos dos minutos
       const recentReport = await this.reportRepository.findOne({
         where: {
-          createdAt: MoreThan(thirtySecondsAgo),
+          createdAt: MoreThan(twoMinutesAgo),
         },
         order: {
           createdAt: 'DESC',
         },
       });
-  
+
       return recentReport ? 2 : 1;
     } catch (error) {
-      throw new InternalServerErrorException('Error al verificar reportes recientes');
+      throw new InternalServerErrorException(
+        'Error al verificar reportes recientes',
+      );
     }
   }
 }
