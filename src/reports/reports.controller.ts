@@ -66,4 +66,9 @@ export class ReportsController {
   getReports() {
     return this.reportsService.getReports();
   }
+
+  @Get('alertEsp32')
+  alertEsp32() {
+    return this.reportsService.alertEsp32();
+  }
 }

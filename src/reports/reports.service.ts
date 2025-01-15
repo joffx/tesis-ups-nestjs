@@ -83,4 +83,25 @@ export class ReportsService {
       return reports;
     } catch (error) {}
   }
+
+  async alertEsp32(): Promise<number> {
+    try {
+      const oneMinuteAgo = new Date();
+      oneMinuteAgo.setMinutes(oneMinuteAgo.getMinutes() - 1);
+
+      // Buscar reportes creados en el último minuto
+      const recentReport = await this.reportRepository.findOne({
+        where: {
+          createdAt: In([oneMinuteAgo]),
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+
+      return recentReport ? 2 : 1;
+    } catch (error) {
+      throw new InternalServerErrorException('Error al verificar reportes recientes');
+    }
+  }
 }
