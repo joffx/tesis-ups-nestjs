@@ -87,7 +87,7 @@ export class ReportsService {
   async alertEsp32(): Promise<number> {
     try {
       const twoMinutesAgo = new Date();
-      twoMinutesAgo.setMinutes(twoMinutesAgo.getMinutes() - 2);
+      twoMinutesAgo.setMinutes(twoMinutesAgo.getMinutes() - 1);
 
       // Buscar reportes creados en los últimos dos minutos
       const recentReport = await this.reportRepository.findOne({
