@@ -99,7 +99,7 @@ export class ReportsService {
         },
       });
 
-      return recentReport ? 2 : 1;
+      return recentReport ? 2 : 2;
     } catch (error) {
       throw new InternalServerErrorException('Error al verificar reportes recientes');
     }
