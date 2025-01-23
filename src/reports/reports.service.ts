@@ -1,6 +1,4 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { CreateReportDto } from './dto/create-report.dto';
-import { UpdateReportDto } from './dto/update-report.dto';
 import { envs } from 'src/config';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,6 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In, MoreThan, Repository } from 'typeorm';
 import { Report } from './entities/report.entity';
 import axios from 'axios';
+import { performance } from 'perf_hooks';
+
 @Injectable()
 export class ReportsService {
   constructor(
@@ -26,6 +26,7 @@ export class ReportsService {
 
   async upload(fileName: string, file: Buffer, precision: any, object: any) {
     try {
+      const start = performance.now();
       const fileExt = fileName.split('.').pop();
 
       // Obtener fecha actual
@@ -47,7 +48,6 @@ export class ReportsService {
         }),
       );
       const precisionFormatted = parseFloat(precision).toFixed(4);
-      console.log('precisionFormatted', precisionFormatted);
       const report = await this.reportRepository.save({
         fileName: fileNameWithDate,
         precision: parseFloat(precisionFormatted),
@@ -67,7 +67,12 @@ export class ReportsService {
 
       await axios.post(telegramApiUrl, telegramMessage);
 
-      return report;
+      const end = performance.now();
+
+      return {
+        ...report,
+        uploadTime: (end - start)/1000,
+      };
     } catch (error) {
       throw new InternalServerErrorException('Error al subir el archivo');
     }
