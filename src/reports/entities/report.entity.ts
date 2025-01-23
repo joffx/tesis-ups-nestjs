@@ -23,6 +23,9 @@ export class Report {
   @Column('float', { default: 0.0 })
   uploadTime: number;
 
+  @Column('float', { default: 0.0 })
+  uploadTimeT: number;
+
   @CreateDateColumn()
   createdAt: Date;
 }
