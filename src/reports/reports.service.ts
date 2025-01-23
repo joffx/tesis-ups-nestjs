@@ -55,7 +55,9 @@ export class ReportsService {
         url: `${envs.awsEndpoint}/${envs.awsBucketName}/${folder}${fileNameWithDate}`,
       });
 
-      await this.reportRepository.save(report);
+      const end = performance.now();
+
+      
       const chat_id_telegram = '-4635919852';
       const message = `Se ha detectado una arma de fuego. Precisión: ${precisionFormatted}. Imagen: ${report.url}`;
       const telegramApiUrl =
@@ -67,12 +69,11 @@ export class ReportsService {
 
       await axios.post(telegramApiUrl, telegramMessage);
 
-      const end = performance.now();
-
-      return {
+      return await this.reportRepository.save({
         ...report,
-        uploadTime: (end - start)/1000,
-      };
+        uploadTime: (end - start)/1000
+      });
+
     } catch (error) {
       throw new InternalServerErrorException('Error al subir el archivo');
     }
