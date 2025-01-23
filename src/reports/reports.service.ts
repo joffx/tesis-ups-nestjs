@@ -80,8 +80,8 @@ export class ReportsService {
       const end = performance.now(); // Marca de tiempo final
 
       // Calcular tiempos
-      const uploadTime = parseFloat(((middle - start) / 1000).toFixed(3));
-      const uploadTimeT = parseFloat(((end - middle) / 1000).toFixed(3));
+      const uploadTime = parseFloat(((end - middle) / 1000).toFixed(3));
+      const uploadTimeT = parseFloat(((middle - start) / 1000).toFixed(3));
 
       // Guardar reporte con los tiempos calculados
       return await this.reportRepository.save({
